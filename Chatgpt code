@@ -1,0 +1,45 @@
+package com.testfly;
+
+import com.mojang.brigadier.Command;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+
+import static net.minecraft.server.command.CommandManager.literal;
+
+public class TestFlyMod implements ModInitializer {
+
+    @Override
+    public void onInitialize() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+            dispatcher.register(
+                literal("testfly")
+                    .executes(ctx -> toggleFlight(ctx.getSource()))
+            )
+        );
+    }
+
+    private int toggleFlight(ServerCommandSource source) {
+        if (!(source.getEntity() instanceof ServerPlayerEntity player)) {
+            source.sendError(Text.literal("Only players can use this command."));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        boolean enabled = player.getAbilities().allowFlying;
+        player.getAbilities().allowFlying = !enabled;
+
+        if (enabled) {
+            player.getAbilities().flying = false;
+        }
+
+        player.sendAbilitiesUpdate();
+        player.sendMessage(
+            Text.literal("Test flight " + (enabled ? "disabled" : "enabled")),
+            false
+        );
+
+        return Command.SINGLE_SUCCESS;
+    }
+}
