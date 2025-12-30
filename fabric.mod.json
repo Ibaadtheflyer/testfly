@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "testfly",
+  "version": "1.0.0",
+  "name": "TestFly",
+  "description": "Dev-only flight toggle for Fabric servers",
+  "authors": ["You"],
+  "environment": "server",
+  "entrypoints": {
+    "main": ["com.testfly.TestFlyMod"]
+  },
+  "depends": {
+    "minecraft": "1.21.1",
+    "fabricloader": ">=0.15.11",
+    "fabric": "*"
+  }
+}
